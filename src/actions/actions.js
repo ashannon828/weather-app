@@ -13,27 +13,37 @@ export const setCityInput = (city) => ({
 });
 
 export const fetchWeatherData = (city) => async (dispatch, getState) => {
-  const apiKey = process.env.REACT_APP_API_KEY;
-  const url = `http://api.openweathermap.org/data/2.5/forecast?q=${
-    getState().setFieldInput.city
-  }&appid=${apiKey}`;
+  const city = getState().setFieldInput.city;
+  const url = `http://localhost:8080/api/forcast/${city}`;
 
   dispatch({ type: FETCH_WEATHER_DATA_PENDING });
 
+  if (!city) {
+    dispatch({
+      type: FETCH_WEATHER_DATA_FAILED,
+      payload: { message: "Enter a city" },
+    });
+    return;
+  }
+
   try {
-    const response = await fetch(url);
-    const data = await response.json();
+    let response = await fetch(url);
+    let data = await response.json();
 
     if (data.cod !== "200") {
       dispatch({
         type: FETCH_WEATHER_DATA_FAILED,
-        payload: sentenceCase(data.message),
+        payload: { ...data, message: sentenceCase(data.message) },
       });
       return;
     }
 
     dispatch({ type: FETCH_WEATHER_DATA_SUCCESS, payload: data });
   } catch (err) {
-    dispatch({ type: FETCH_WEATHER_DATA_FAILED, payload: err });
+    console.log(city);
+    dispatch({
+      type: FETCH_WEATHER_DATA_FAILED,
+      payload: { cod: 500, message: "Something went wrong" },
+    });
   }
 };

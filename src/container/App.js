@@ -19,7 +19,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     setCity: (event) => dispatch(setCityInput(event)),
-    fetchWeatherData: (city) => dispatch(fetchWeatherData()),
+    fetchWeatherData: () => dispatch(fetchWeatherData()),
   };
 };
 
@@ -27,7 +27,7 @@ function App({ city, setCity, fetchWeatherData, tempData, isPending, err }) {
   return (
     <div className="App">
       <h1>Weather Test</h1>
-      {err && <Error err={err} />}
+      {err && <Error err={err.message} />}
       <Search
         city={city}
         setCity={setCity}
