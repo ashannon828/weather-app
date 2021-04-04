@@ -26,7 +26,7 @@ const calcNewTemp = (l, idx) => {
         ]
       : l.slice(idx + 1, idx + len + 1);
 
-  // calculate new temp
+  // Map over and destructure dec and inc arrays so only temp prop is used
   const newTemp =
     (l[idx].temp +
       average(dec.map(({ temp }) => temp)) * (1 - idx * 0.02) +
@@ -61,6 +61,7 @@ app.get("/api/forcast/:city", async (req, res) => {
   // clone array to append new data to
   const result = [...newList];
 
+  // ran out of time, but I'd have tested performance of do while vs recursive function
   let idx = 0;
   do {
     result.push({
