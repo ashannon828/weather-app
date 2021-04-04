@@ -26,7 +26,7 @@ const mapDispatchToProps = (dispatch) => {
 function App({ city, setCity, fetchWeatherData, tempData, isPending, err }) {
   return (
     <div className="App">
-      <h1>Weather Test</h1>
+      <h1>Weather Forcast</h1>
       {err && <Error err={err.message} />}
       <Search
         city={city}

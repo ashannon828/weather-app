@@ -37,10 +37,8 @@ export const fetchWeatherData = (city) => async (dispatch, getState) => {
       });
       return;
     }
-
     dispatch({ type: FETCH_WEATHER_DATA_SUCCESS, payload: data });
   } catch (err) {
-    console.log(city);
     dispatch({
       type: FETCH_WEATHER_DATA_FAILED,
       payload: { cod: 500, message: "Something went wrong" },
