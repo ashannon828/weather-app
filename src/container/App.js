@@ -24,6 +24,7 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 function App({ city, setCity, fetchWeatherData, tempData, isPending, err }) {
+  console.log(tempData);
   return (
     <div className="App">
       <h1>Weather Forcast</h1>

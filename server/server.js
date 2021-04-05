@@ -5,6 +5,8 @@ const cors = require("cors");
 const fetch = require("node-fetch");
 const dayjs = require("dayjs");
 
+const db = require("./db/db");
+
 const average = (nums) => {
   return nums.reduce((a, b) => a + b) / nums.length;
 };
@@ -36,22 +38,7 @@ const calcNewTemp = (l, idx) => {
   return Math.round(newTemp * 100) / 100;
 };
 
-app = express();
-
-app.use(cors({ origin: "http://localhost:3000" }));
-
-app.get("/api/forcast/:city", async (req, res) => {
-  const apiKey = process.env.API_KEY;
-  const url = `http://api.openweathermap.org/data/2.5/forecast?q=${req.params.city}&appid=${apiKey}`;
-  let response = await fetch(url);
-  let data = await response.json();
-
-  // test if there's an error from openweathermap end point
-  if (!data.hasOwnProperty("list")) {
-    res.json(data);
-    return;
-  }
-
+const formatList = (data) => {
   // strip only the data needed from list, if I were to calc temp in C, I'd do that here.
   const newList = data.list.map((dt) => {
     const temp = dt.main.temp;
@@ -59,19 +46,82 @@ app.get("/api/forcast/:city", async (req, res) => {
   });
 
   // clone array to append new data to
-  const result = [...newList];
+  const formattedList = [...newList];
 
   // ran out of time, but I'd have tested performance of do while vs recursive function
   let idx = 0;
   do {
-    result.push({
-      dt: dayjs.unix(result[idx].dt).add(5, "d").unix(),
+    formattedList.push({
+      dt: dayjs.unix(formattedList[idx].dt).add(5, "d").unix(),
       temp: calcNewTemp(newList, idx),
     });
     idx++;
-  } while (result.length < 80);
+  } while (formattedList.length < 80);
 
-  res.json({ ...data, list: result });
+  return formattedList;
+};
+
+const cacheCity = (data) => {
+  // create data for db
+  const cityId = data.city.id;
+  const d = new Date();
+  const dt = d.toISOString();
+  const jsonData = JSON.stringify(data);
+
+  // add data to db
+  const stmt = db.prepare("INSERT INTO cache VALUES (?,?,?,?)");
+  stmt.run(cityId, data.city.name.toLowerCase(), dt, jsonData);
+  stmt.finalize();
+};
+
+app = express();
+
+app.use(cors({ origin: "http://localhost:3000" }));
+
+app.get("/api/forcast/:city", async (req, res) => {
+  const city = req.params.city.toLowerCase();
+  const apiKey = process.env.API_KEY;
+
+  try {
+    db.serialize(() => {
+      db.run(
+        "CREATE TABLE IF NOT EXISTS cache (city_id INTEGER PRIMARY KEY, city_name TEXT, date TEXT, data BLOB)"
+      );
+
+      db.get(
+        `SELECT * FROM cache WHERE city_name='${city.toLowerCase()}'`,
+        async (err, row) => {
+          if (err) throw err;
+          // if data exists in DB, return it
+          if (row) {
+            console.log("from cache");
+            res.json({ ...JSON.parse(row.data) });
+          } else {
+            const url = `http://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}`;
+            const response = await fetch(url);
+            const data = await response.json();
+
+            // test if data is returned without error
+            if (!data.hasOwnProperty("list")) {
+              res.json(data);
+              return;
+            }
+
+            const formattedList = formatList(data);
+            const finalData = { ...data, list: formattedList };
+
+            cacheCity(finalData);
+
+            console.log("from api");
+
+            res.json(finalData);
+          }
+        }
+      );
+    });
+  } catch (err) {
+    console.error(err);
+  }
 });
 
 app.listen(8080, () => console.log("server listening on port: 8080"));

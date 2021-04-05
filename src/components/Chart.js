@@ -10,7 +10,7 @@ export default function Chart({ tempData }) {
   return (
     <div>
       <h2>{tempData.city.name} Tempurature Forcast:</h2>
-      <ResponsiveContainer width="100%" height="50%">
+      <ResponsiveContainer width="100%" height={400}>
         <BarChart data={data}>
           <XAxis dataKey="dt"></XAxis>
           <YAxis dataKey="temp"></YAxis>
