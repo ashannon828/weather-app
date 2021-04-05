@@ -7,7 +7,7 @@ const dayjs = require("dayjs");
 
 const db = require("./db/db");
 
-app = express();
+const app = express();
 
 app.use(cors({ origin: "http://localhost:3000" }));
 
@@ -104,7 +104,7 @@ app.get("/api/forcast/:city", async (req, res) => {
             const data = await response.json();
 
             // test if data is returned without error
-            if (!data.hasOwnProperty("list")) {
+            if (!Object.prototype.hasOwnProperty.call(data, "list")) {
               res.json(data);
               return;
             }

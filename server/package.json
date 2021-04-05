@@ -6,7 +6,8 @@
   "proxy": "http://localhost:8080",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js"
+    "start": "nodemon server.js",
+    "lint": "eslint ./"
   },
   "author": "",
   "license": "ISC",
@@ -17,5 +18,8 @@
     "express": "^4.17.1",
     "node-fetch": "^2.6.1",
     "sqlite3": "^5.0.2"
+  },
+  "devDependencies": {
+    "eslint": "^7.23.0"
   }
 }
