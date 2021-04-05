@@ -14,8 +14,8 @@ export default function Chart({ tempData }) {
       <h2>{tempData.city.name} Tempurature Forcast:</h2>
       <ResponsiveContainer width="100%" height={400}>
         <BarChart data={data}>
-          <XAxis dataKey="dt"></XAxis>
-          <YAxis dataKey="temp"></YAxis>
+          <XAxis dataKey="dt" />
+          <YAxis dataKey="temp" />
           <Bar dataKey="temp" fill="#8884d8" />
         </BarChart>
       </ResponsiveContainer>

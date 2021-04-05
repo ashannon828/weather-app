@@ -1,27 +1,8 @@
-// import setFieldInput from "./setFieldReducer";
-// import fetchWeatherData from "./fetchWeatherData";
-
-// export { setFieldInput, fetchWeatherData };
-
 import {
-  SET_CITY_INPUT,
   FETCH_WEATHER_DATA_PENDING,
   FETCH_WEATHER_DATA_SUCCESS,
   FETCH_WEATHER_DATA_FAILED,
 } from "../constants/constants.js";
-
-const initialCityState = {
-  city: "",
-};
-
-export const setFieldInput = (state = initialCityState, action = {}) => {
-  switch (action.type) {
-    case SET_CITY_INPUT:
-      return { ...state, city: action.payload };
-    default:
-      return state;
-  }
-};
 
 const initialFetchState = {
   tempData: "",
@@ -29,7 +10,7 @@ const initialFetchState = {
   err: "",
 };
 
-export const fetchWeatherData = (state = initialFetchState, action = {}) => {
+const fetchWeatherData = (state = initialFetchState, action = {}) => {
   switch (action.type) {
     case FETCH_WEATHER_DATA_PENDING:
       return { ...state, isPending: true };
@@ -46,3 +27,5 @@ export const fetchWeatherData = (state = initialFetchState, action = {}) => {
       return state;
   }
 };
+
+export default fetchWeatherData;
