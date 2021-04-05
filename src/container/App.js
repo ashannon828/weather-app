@@ -7,6 +7,8 @@ import Error from "../components/Error";
 
 import { fetchWeatherData, setCityInput } from "../actions/actions.js";
 
+import PropTypes from "prop-types";
+
 const mapStateToProps = (state) => {
   return {
     city: state.setFieldInput.city,
@@ -23,7 +25,7 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-function App({ city, setCity, fetchWeatherData, tempData, isPending, err }) {
+function App({ city, setCity, fetchWeatherData, tempData, err }) {
   console.log(tempData);
   return (
     <div className="App">
@@ -38,5 +40,13 @@ function App({ city, setCity, fetchWeatherData, tempData, isPending, err }) {
     </div>
   );
 }
+
+App.propTypes = {
+  city: PropTypes.string,
+  setCity: PropTypes.func,
+  fetchWeatherData: PropTypes.func,
+  tempData: PropTypes.object,
+  err: PropTypes.object,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

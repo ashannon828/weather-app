@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 export default function Search({ city, setCity, fetchWeatherData }) {
   const handleSubmit = async (e) => {
@@ -19,3 +20,9 @@ export default function Search({ city, setCity, fetchWeatherData }) {
     </div>
   );
 }
+
+Search.propTypes = {
+  city: PropTypes.string,
+  setCity: PropTypes.func,
+  fetchWeatherData: PropTypes.func,
+};

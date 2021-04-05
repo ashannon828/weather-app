@@ -12,7 +12,7 @@ export const setCityInput = (city) => ({
   payload: city,
 });
 
-export const fetchWeatherData = (city) => async (dispatch, getState) => {
+export const fetchWeatherData = () => async (dispatch, getState) => {
   const city = getState().setFieldInput.city;
   const url = `http://localhost:8080/api/forcast/${city}`;
 

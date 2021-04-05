@@ -1,6 +1,7 @@
 import React from "react";
 import dayjs from "dayjs";
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis } from "recharts";
+import PropTypes from "prop-types";
 
 export default function Chart({ tempData }) {
   // format unix time
@@ -21,3 +22,7 @@ export default function Chart({ tempData }) {
     </div>
   );
 }
+
+Chart.propTypes = {
+  tempData: PropTypes.object,
+};
