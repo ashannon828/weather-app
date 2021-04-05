@@ -3,6 +3,7 @@ import dayjs from "dayjs";
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis } from "recharts";
 
 export default function Chart({ tempData }) {
+  // format unix time
   const data = tempData.list.map((day) => {
     return { dt: dayjs.unix(day.dt).format(), temp: day.temp };
   });

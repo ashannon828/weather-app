@@ -7,6 +7,10 @@ const dayjs = require("dayjs");
 
 const db = require("./db/db");
 
+app = express();
+
+app.use(cors({ origin: "http://localhost:3000" }));
+
 const average = (nums) => {
   return nums.reduce((a, b) => a + b) / nums.length;
 };
@@ -69,14 +73,12 @@ const cacheCity = (data) => {
   const jsonData = JSON.stringify(data);
 
   // add data to db
+  // run into an issue adding Kharkiv vs Kharkov since they share the same cityId
+  // something I'd fix if I had more time
   const stmt = db.prepare("INSERT INTO cache VALUES (?,?,?,?)");
   stmt.run(cityId, data.city.name.toLowerCase(), dt, jsonData);
   stmt.finalize();
 };
-
-app = express();
-
-app.use(cors({ origin: "http://localhost:3000" }));
 
 app.get("/api/forcast/:city", async (req, res) => {
   const city = req.params.city.toLowerCase();
@@ -120,6 +122,7 @@ app.get("/api/forcast/:city", async (req, res) => {
       );
     });
   } catch (err) {
+    // with more time, I'd also add more robust error handling
     console.error(err);
   }
 });
