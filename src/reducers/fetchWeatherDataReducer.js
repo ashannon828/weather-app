@@ -2,7 +2,7 @@ import {
   FETCH_WEATHER_DATA_PENDING,
   FETCH_WEATHER_DATA_SUCCESS,
   FETCH_WEATHER_DATA_FAILED,
-} from "../constants/constants.js";
+} from "../constants/constants";
 
 const initialFetchState = {
   tempData: "",

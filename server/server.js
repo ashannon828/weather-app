@@ -93,7 +93,7 @@ app.get("/api/forcast/:city", async (req, res) => {
       db.get(
         `SELECT * FROM cache WHERE city_name='${city.toLowerCase()}'`,
         async (err, row) => {
-          // if (err) throw err;
+          if (err) throw error;
           // if data exists in DB, return it
           if (row) {
             console.log("from cache");
